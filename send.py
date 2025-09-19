@@ -24,14 +24,25 @@ def po():
 def ge():
 
     book = Books.query.all()
-    return jsonify(book)
+
+    hold = []
+
+    for me in book:
+    #print(book)
+        hold.append({
+        "author": me.author,
+        "title": me.title,
+        "year": me.year
+    })
+
+    return jsonify(hold)
 
 
 @send.route('/pu', methods=['PUT'])
 def pu():
 
     data = request.get_json()
-    new_author = data.get("author")
+    new_author = data.get("new_author")
     new_id = data.get("new_id")
 
     if not new_author:
@@ -49,11 +60,12 @@ def pu_year():
 
     data = request.get_json()
     new_year = data.get("new_year")
+    new_id = data.get("new_id")
 
     if not new_year:
         return jsonify({"message": "new year required"}), 400
     
-    main = Books.query.filter_by(year=new_year).first()
+    main = Books.query.filter_by(id=new_id).first()
 
     if main:
         main.year = new_year
@@ -66,11 +78,12 @@ def pu_title():
 
     data = request.get_json()
     new_title = data.get("new_title")
+    new_id = data.get("new_id")
 
     if not new_title:
         return jsonify({"message": "new title required"}), 400
     
-    main = Books.query.filter_by(title=new_title).first()
+    main = Books.query.filter_by(id=new_id).first()
 
     if main:
         main.title = new_title
@@ -83,15 +96,17 @@ def pu_title():
 def dele():
 
     data = request.get_json()
-    author = data.get("author")
+    rid_author = data.get("rid_author")
 
-    if not author:
-        return jsonify({"messaage": "author required"})
+    if not rid_author:
+        return jsonify({"messaage": "rid_author required"})
     
-    delet = Books.query.filter_by(author=author).first()
+    delet = Books.query.filter_by(author=rid_author).first()
 
     if delet:
         db.session.delete(delet)
         db.session.commit()
+        return jsonify({"message": "content deleted successfully"}), 201
+    return jsonify({"error": f"No book found with id {rid_author}"}), 404
 
 
