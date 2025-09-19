@@ -79,3 +79,19 @@ def pu_title():
     
 
 
+@send.route('/dele', methods=['DELETE'])
+def dele():
+
+    data = request.get_json()
+    author = data.get("author")
+
+    if not author:
+        return jsonify({"messaage": "author required"})
+    
+    delet = Books.query.filter_by(author=author).first()
+
+    if delet:
+        db.session.delete(delet)
+        db.session.commit()
+
+
