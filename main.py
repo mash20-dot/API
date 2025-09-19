@@ -6,7 +6,6 @@ from send import send
 
 app = Flask(__name__)
 
-app.config['API_KEYS'] = os.getenv('API_KEYS')
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///API_DATA.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
